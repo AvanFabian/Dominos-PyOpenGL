@@ -63,15 +63,6 @@ def cube():
             glVertex3fv(vertices[vertex])
     glEnd()
 
-def button():
-    glBegin(GL_QUADS)
-    for i_surface, surface in enumerate(surfaces):
-        glNormal3fv(normals[i_surface])
-        for vertex in surface:
-            glTexCoord2fv(uv_coords[vertex])
-            glVertex3fv(vertices[vertex])
-    glEnd()
-
 def load_texture(image_path):
     textureSurface = pg.image.load(image_path)
     textureData = pg.image.tostring(textureSurface, "RGBA", 1)
@@ -85,7 +76,7 @@ def load_texture(image_path):
 
     return texture
 
-# def show():
+# def background():
 #     glEnable(GL_TEXTURE_2D)
 #     glBindTexture(GL_TEXTURE_2D, texture)
 #     glPushMatrix()
@@ -93,27 +84,38 @@ def load_texture(image_path):
 #     cube()
 #     glPopMatrix()
 
-def show():
+def background():
     glEnable(GL_TEXTURE_2D)
 
     # Draw the background
-    glBindTexture(GL_TEXTURE_2D, texture)
+    glBindTexture(GL_TEXTURE_2D, bg_texture)
     glPushMatrix()
-    glScalef(2.1, 2.1, 2.1)
+    glScalef(3.75, 3.75, 0)  # Adjust the size of the background
     cube()
     glPopMatrix()
 
-    # Draw the button
-    glBindTexture(GL_TEXTURE_2D, button_texture)
+def startbutton():
+        # Draw the button
+    glBindTexture(GL_TEXTURE_2D, start_texture)
     glPushMatrix()
     # Adjust the coordinates and size of the button
-    glTranslatef(0.0, 0.0, 2.0)  # Adjust the z-coordinate to place the button in front of the background
-    glScalef(0.5, 0.5, 0.5)  # Adjust the scale to make the button smaller
+    glTranslatef(0.0, -1.1, 3)  # Adjust the z-coordinate to place the button in front of the background
+    glScalef(0.3, 0.1, 0)  
+    cube()
+    glPopMatrix()
+
+def replaybutton():
+        # Draw the button
+    glBindTexture(GL_TEXTURE_2D, replay_texture)
+    glPushMatrix()
+    # Adjust the coordinates and size of the button
+    glTranslatef(1.0, -1.1, 3)  # Adjust the z-coordinate to place the button in front of the background
+    glScalef(0.3, 0.1, 0)  
     cube()
     glPopMatrix()
 
 def main():
-    global texture, button_texture
+    global bg_texture, start_texture, replay_texture
     material_ambient = (0.1, 0.1, 0.1, 1.0)
     material_diffuse = (0.7, 0.7, 0.7, 1.0)
     material_specular = (0.5, 0.5, 0.5, 1)
@@ -142,8 +144,9 @@ def main():
 
     glEnable(GL_DEPTH_TEST)
 
-    texture = load_texture("TextureImage/dominobg_new.jpg")
-    button_texture = load_texture("TextureImage/replay.png")
+    bg_texture = load_texture("TextureImage/dominobg_new.jpg")
+    start_texture = load_texture("TextureImage/start.jpg")
+    replay_texture = load_texture("TextureImage/replay.jpg")
 
     while True:
         for event in pg.event.get():
@@ -152,7 +155,9 @@ def main():
                 quit()       
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        show()
+        background()
+        startbutton()
+        replaybutton()
         pg.display.flip()
         pg.time.wait(10)
 
